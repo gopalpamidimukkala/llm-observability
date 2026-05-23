@@ -12,19 +12,18 @@ type ChatParams = {
 export async function generateChatResponse({
   conversationId,
   messages,
-  provider
+  provider,
 }: ChatParams) {
   const start = Date.now();
 
   try {
-
     const providerInstance = getProvider(provider || "groq");
 
     const response = await providerInstance.generateResponse(messages);
 
     const latencyMs = Date.now() - start;
 
-    await fetch("http://localhost:3000/api/ingest", {
+    await fetch(`${process.env.APP_URL}/api/ingest`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +56,7 @@ export async function generateChatResponse({
     const latencyMs = Date.now() - start;
 
     // Log failed inference
-    await fetch("http://localhost:3000/api/ingest", {
+    await fetch(`${process.env.APP_URL}/api/ingest`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
